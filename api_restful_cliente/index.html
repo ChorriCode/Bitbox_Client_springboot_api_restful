@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Client Api Restful</title>
+    <script type="text/javascript" src="./js/jquery/jquery-3.3.1.min.js"></script>
+
+    <link rel="stylesheet" href="./css/jquery-ui/jquery-1.12.1-ui.css">
+    <script type="text/javascript" src="./js/jquery/jquery-1.12.1-ui.min.js"></script>
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap-4.4.1-min.css">
+    <script type="text/javascript" src="./js/bootstrap/popper.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap/bootstrap-4.4.1-min.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
+    <script type="text/javascript" src="./js/main.js"></script>
+
+
+
+</head>
+<body>
+
+<div class="container vh-auto">
+    <div class="row vh-100">
+        <div id="menu_nav" class="d-none color-navbar color-font-navbar col-2 pt-5 vh-auto">
+            <nav class="nav flex-column mt-5 position-fixed w-auto">
+                <button id="btn_items_list_view" type="button" class="btn btn-primary mt-3 mb-2">Items</button>
+                <button id="btn_suppliers_list_view" type="button" class="btn btn-primary mt-3 mb-2">Suppliers</button>
+                <button id="btn_logout" type="button" class="btn btn-primary mt-3 mb-2">Logout</button>
+           </nav>
+        </div>
+        <!-- MAIN CONTAINER -->
+        <div class="col-10 bg-light">
+
+            <!-- LOGIN -->
+            <div id="login_view" class="no-show d-none container w-50 mt-4 mb-4">
+                <div class="container mt-4 mb-4">
+                    <h2 class="text-center">SIGN IN</h2>
+                </div>
+                <div id="error_login_view" style="visibility: hidden" class="color-font-error container mt-4 mb-4">
+                    <h3 class="text-center">--</h3>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">User Name</span>
+                    </div>
+                    <input id="login_user_name" type="text" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >password</span>
+                    </div>
+                    <input id="login_password" type="password" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="container mt-4 text-center">
+                    <button id="btn_login" type="button" class="btn btn-primary">login</button>
+                </div>
+            </div>
+            <!-- LOGIN END -->
+
+            <!-- ITEMS LIST -->
+            <div id="items_list_view" class="no-show d-none container w-75 mt-4 mb-4 float-left">
+                <div class="container mt-5 mb-5">
+                    <h2 class="text-center">Items List</h2>
+                </div>
+                <div class="container position-fixed fixed-top">
+                    <button id="btn_new_item_view" type="button" class="float-right btn btn-primary mt-5">MENU NEW ITEM</button>
+                </div>
+               <table class="table table-striped">
+                   <thead>
+                    <tr>
+                       <th>Item code</th>
+                       <th>Description</th>
+                       <th>Price</th>
+                       <th>Acction</th>
+                    </tr>
+                   </thead>
+                   <tbody>
+                    <tr data-id_item="">
+                       <td>1001</td>
+                       <td>Coca Cola 1L</td>
+                       <td>1.20</td>
+                       <td><button id="btn_edit_item" type="button" class="btn btn-warning pt-0 pb-0">edit</button></td>
+                    </tr>
+                   </tbody>
+               </table>
+            </div>
+            <!-- ITEMS LIST END -->
+
+            <!-- NEW ITEM -->
+            <div id="item_new_view" class="no-show d-none container w-75 mt-4 mb-4 position-relative">
+                <div class="container mt-5 mb-5">
+                    <h2 class="text-center">Create new item</h2>
+                </div>
+                <div class="container position-fixed fixed-top">
+                    <button id="btn_item_create_new" type="button" class="float-right btn btn-primary mt-5">CREATE ITEM</button>
+                </div>
+                <div style="visibility: hidden" class="color-font-error container mt-4 mb-4">
+                    <h3 class="text-center">--</h3>
+                </div>
+                <!-- NEW ITEM CODE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Item code</span>
+                    </div>
+                    <input id="item_new_code" type="number" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- NEW ITEM DESCRIPTION -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <input id="item_new_description" type="text" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- NEW ITEM PRICE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Price</span>
+                    </div>
+                    <input id="item_new_price" type="number" step="0.01" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <!-- NEW ITEM SUPPLIERS -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Suppliers</span>
+
+                            <div class="input-group">
+                                <select class="form-control" id="item_new_select_suppliers" aria-label="Example select with button addon">
+                                    <option selected>Choose...</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button id="btn_item_new_add_supplier" type="button" class="float-right btn btn-success pt-0 pb-0">add supplier</button>
+                                </div>
+                            </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Country</th>
+                            <th>Acction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-item_id_supplier="">
+                            <td>El Corte Inglés</td>
+                            <td>Spain</td>
+                            <td><button id="btn_edit_new_item_supplier" type="button" class="btn btn-warning">unsign</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ITEM CREATION DATE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Creation date</span>
+                    </div>
+                    <input id="item_new_creation_date" type="text" readonly class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- ITEM REGISTER BY -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Register by</span>
+                    </div>
+                    <input id="item_new_register_by" type="text" readonly class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <!-- NEW ITEM END -->
+
+
+            <!-- ITEM DETAILS UPDATE -->
+            <div id="item_details_view" class="no-show d-none container w-75 mt-4 mb-4 position-relative">
+                <div class="container mt-5 mb-5">
+                    <h2 class="text-center">Item details update</h2>
+                </div>
+                <div class="container position-fixed fixed-top">
+                    <button id="btn_item_update" type="button" class="float-right btn btn-primary mt-5">UPDATE ITEM</button>
+                </div>
+                <div style="visibility: hidden" class="color-font-error container mt-4 mb-4">
+                    <h3 class="text-center">--</h3>
+                </div>
+                <!-- ITEM CODE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Item code</span>
+                    </div>
+                    <input id="item_code" type="number" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- ITEM DESCRIPTION -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <input id="item_description" type="text" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- ITEM PRICE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Price</span>
+                    </div>
+                    <input id="item_price" type="number" step="0.01" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- ITEM PRICES REDUCTION -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Prices reduction</span>
+                        <div class="container">
+                            <button id="btn_item_prices_reduction" type="button" class="float-right btn btn-success pt-0 pb-0">new price reduction</button>
+                        </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Reduced Price</th>
+                            <th>Start date</th>
+                            <th>End date</th>
+                            <th>Acction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-id_price_reduction="">
+                            <td>12.50</td>
+                            <td>2020-01-17</td>
+                            <td>2020-02-10</td>
+                            <td><button id="btn_edit_price_reduction" type="button" class="btn btn-warning pt-0 pb-0">edit</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ITEM SUPPLIERS -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Suppliers</span>
+                        <div class="container">
+                            <button id="btn_item_add_supplier" type="button" class="float-right btn btn-success pt-0 pb-0">add supplier</button>
+                        </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Country</th>
+                            <th>Acction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-item_id_supplier="">
+                            <td>El Corte Inglés</td>
+                            <td>Spain</td>
+                            <td><button id="btn_edit_item_supplier" type="button" class="btn btn-warning">unsign</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ITEM CREATION DATE -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Creation date</span>
+                    </div>
+                    <input id="item_creation_date" type="text" readonly class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <!-- ITEM REGISTER BY -->
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Register by</span>
+                    </div>
+                    <input id="item_register_by" type="text" readonly class="form-control" aria-label="" aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <!-- ITEM DETAILS UPDATE END -->
+
+
+            <!-- SUPPLIERS LIST -->
+            <div id="suppliers_list_view" class="no-show d-none container w-75 mt-4 mb-4 float-left">
+                <div class="container mt-5 mb-5">
+                    <h2 class="text-center">Suppliers List</h2>
+                </div>
+                <div class="container position-fixed fixed-top">
+                    <button id="btn_new_supplier_view" type="button" class="float-right btn btn-primary mt-5">MENU NEW SUPPLIER</button>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Country</th>
+                        <th>Acction</th>
+                    </tr>
+                    </thead>
+                    <tbody id="supplier_list_view">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SUPPLIERS LIST END -->
+
+
+
+
+        </div>
+        <!-- MAIN CONTAINER END -->
+
+    </div>
+</div>
+<!-- TEMPLATES SUPPLIER -->
+<template id="template_new_supplier">
+    <tr class="no-show-sub" data-id_supplier="">
+        <td><input id="supplier_name" type="text" required class="form-control"></td>
+        <td><input id="supplier_country" type="text" required class="form-control"></td>
+        <td>
+            <button type="button" class="btn btn-warning">add supplier</button>
+            <button type="button" class="btn btn-danger">cancel</button>
+        </td>
+    </tr>
+</template>
+<template id="template_suppliers_list">
+    <tr id="tr_edit_supplier_id" class="supplier_id">
+        <td class="py-1"><input class="supplier_name" type="text" readonly  class="form-control"></td>
+        <td class="py-1"><input class="supplier_country" type="text" readonly class="form-control"></td>
+        <td class="py-1">
+            <button id="btn_edit_supplier_id" type="button" class="btn btn-warning">edit</button>
+            <button id="btn_delete_supplier_id" type="button" class="btn btn-danger">delete</button>
+        </td>
+    </tr>
+</template>
+<!-- TEMPLATES SUPPLIER END -->
+
+
+</body>
+</html>
