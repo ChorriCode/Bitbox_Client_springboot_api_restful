@@ -136,7 +136,7 @@
                                 </div>
                             </div>
                     </div>
-                    <table class="table table-striped">
+                    <table id="table_suppliers_assigned_to_item" class="table table-striped">
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -144,12 +144,8 @@
                             <th>Acction</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr data-item_id_supplier="">
-                            <td>El Corte Inglés</td>
-                            <td>Spain</td>
-                            <td><button id="btn_edit_new_item_supplier" type="button" class="btn btn-warning">unsign</button></td>
-                        </tr>
+                        <tbody id="new_assigned_suppliers_list_view">
+
                         </tbody>
                     </table>
                 </div>
@@ -246,12 +242,8 @@
                             <th>Acction</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr data-item_id_supplier="">
-                            <td>El Corte Inglés</td>
-                            <td>Spain</td>
-                            <td><button id="btn_edit_item_supplier" type="button" class="btn btn-warning">unsign</button></td>
-                        </tr>
+                        <tbody id="assigned_suppliers_list_view">
+
                         </tbody>
                     </table>
                 </div>
@@ -327,6 +319,21 @@
 </template>
 <!-- TEMPLATES SUPPLIER END -->
 
-
+<!-- TEMPLATES ITEM  -->
+<!-- TEMPLATES ITEM : SELECT SUPPLIER -->
+<template id="template_select_suppliers">
+    <option value=""></option>
+</template>
+<!-- TEMPLATES ITEM : SUPPLIER END -->
+<!-- TEMPLATES ITEM : TABLE SUPPLIER ASSIGNED -->
+<template id="template_supplier_assigned_to_item">
+    <tr id="tr_supplier_assigned_to_item" >
+        <td class="supplier_name"></td>
+        <td class="supplier_country"></td>
+        <td><button id="btn_unsign_item_supplier" type="button" class="btn btn-warning">unsign</button></td>
+    </tr>
+</template>
+<!-- TEMPLATES ITEM : TABLE SUPPLIER ASSIGNED END-->
+<!-- TEMPLATES ITEM END -->
 </body>
 </html>

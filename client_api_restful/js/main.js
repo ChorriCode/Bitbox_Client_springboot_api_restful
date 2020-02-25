@@ -20,7 +20,6 @@ $(document).ready(function () {
 let buttonsUpdateSuppliers = function() {
     $('#supplier_list_view tr button').each(function( index, element ) {
         let id = "#"+ $(this).attr('id');
-        console.log(index, element.id);
         let supplierId = this.id.split("-")[1];
         $(id).click(function () {
                 if(this.innerHTML == 'save') {
@@ -54,6 +53,9 @@ let buttonsUpdateSuppliers = function() {
 let buttonNewItemView = function() {
     $('#btn_new_item_view').click(function () {
         showSectionWithId('item_new_view');
+        let supplierList = getAllSuppliers();
+        showSuppliersListForOptionTag(supplierList);
+        buttonAssignSupplier();
     });
 }
 
@@ -64,10 +66,11 @@ let buttonSuppliersListView = function() {
         toggleShowAndHideButton('btn_new_supplier_view','show');
         hideAllSubSections();
         getAllSuppliers();
+        buttonsUpdateSuppliers();
 
     });
 }
-
+// TODO
 // SHOW LIST ALL ITEMS
 let buttonItemsListView = function() {
     $('#btn_items_list_view').click(function () {
@@ -77,6 +80,50 @@ let buttonItemsListView = function() {
     });
 }
 
+// BUTT ADD NEW ASSIGNED SUPPLIER TO ITEM
+let buttonAssignSupplier = function assignSupplierToItem() {
+
+    $('#btn_item_new_add_supplier').click(function () {
+        showAssignedSupplierToItem();
+
+    });
+}
+function showAssignedSupplierToItem(){
+    let view = getById('new_assigned_suppliers_list_view');
+    let templateAssignedSupplier = getById('template_supplier_assigned_to_item');
+    let clon = templateAssignedSupplier.content.cloneNode(true);
+    let button = clon.querySelector('#btn_unsign_item_supplier');
+    let trSupplierData = clon.querySelector('#tr_supplier_assigned_to_item');
+    let supplierName = clon.querySelector('.supplier_name');
+    let supplierCountry = clon.querySelector('.supplier_country');
+    let selectTag = getById('item_new_select_suppliers');
+    let supplierData = selectTag.options[selectTag.selectedIndex].value;
+    let suplierJson = JSON.parse(supplierData);
+
+    button.id = 'btn_unsign_item_supplier-' + suplierJson.id ;
+    supplierName.innerText = suplierJson.name;
+    supplierCountry.innerText = suplierJson.country;
+    trSupplierData.dataset.supplierJson = supplierData;
+    trSupplierData.id = "tr_supplier_assigned_to_item-" + suplierJson.id;
+    view.appendChild(clon);
+
+    //incomplete
+    function chechAssginedSupplierDuplicated() {
+        let tr = getById('new_assigned_suppliers_list_view');
+        let allTrTags = tr.getElementsByTagName('tr');
+        let arrayIds = {};
+        Array.from(allTrTags).forEach(function(element) {
+            console.log(element.dataset.supplierJson);
+            console.log(JSON.parse(element.dataset));
+            let supplierJson = JSON.parse(element.dataset);
+            arrayIds[supplierJson.id] = true;
+            console.log(element.dataset);
+        })
+        console.log(arrayIds);
+    }
+}
+
+
 // SHOW MENU CREATE NEW SUPPLIER
 let buttonNewSupplierView = function() {
     $('#btn_new_supplier_view').click(function () {
@@ -84,7 +131,6 @@ let buttonNewSupplierView = function() {
         showSubSectionWithId('add_supplier_view');
         toggleShowAndHideButton('btn_new_supplier_view','hide');
         showSupplierCreatorNew();
-
     });
 }
 // SAVE SUPPLIER FROM MENU NEW SUPPLIER
@@ -96,7 +142,6 @@ let buttonNewSupplierAction = function() {
         saveNewSupplier();
         toggleShowAndHideButton('btn_new_supplier_view','show');
         getAllSuppliers();
-
     });
 
     // BUTTON TO CANCEL ADD A NEW SUPPLIER
@@ -105,10 +150,7 @@ let buttonNewSupplierAction = function() {
         hideAllSubSections();
         toggleShowAndHideButton('btn_new_supplier_view','show');
         getAllSuppliers();
-
     });
-
-
 }
 
 function login() {
@@ -327,9 +369,10 @@ function showSuppliersList(jsonResponse){
     let view = getById('supplier_list_view');
     let templateSuppliersList = getById('template_suppliers_list');
     let fragment = document.createDocumentFragment();
-    let clon, supplier, supplierId, supplierName, supplierCountry;
+    let clon, supplier, supplierName, supplierCountry;
+    let i;
     view.innerHTML = "";
-    for(let i = 0 ; i < max; i++) {
+    for(i = 0 ; i < max; i++) {
         supplier = suppliers[i];
         clon = templateSuppliersList.content.cloneNode(true);
         tagTr = clon.querySelector('#tr_edit_supplier_id');
@@ -338,7 +381,7 @@ function showSuppliersList(jsonResponse){
 
         supplierName = clon.querySelector('.supplier_name');
         supplierCountry = clon.querySelector('.supplier_country');
-        // at the end id attribute of the "button" tag I add the "supplierId" to identify it
+
         tagTr.id = 'tr_edit_supplier_id-' + supplier.id;
         editButton.id = 'btn_edit_supplier_id-' + supplier.id;
         deleteButton.id = 'btn_delete_supplier_id-' + supplier.id;
@@ -349,13 +392,34 @@ function showSuppliersList(jsonResponse){
     view.appendChild(fragment);
 }
 
+function showSuppliersListForOptionTag(jsonResponse){
+    let suppliers = jsonResponse;
+    let max = suppliers.length;
+    let view = getById('item_new_select_suppliers');
+    let templateSuppliersOptionList = getById('template_select_suppliers');
+    let fragment = document.createDocumentFragment();
+    let clon, supplier, supplierId, supplierName, supplierCountry;
+    view.innerHTML = "";
+    let i;
+    for(i = 0 ; i < max; i++) {
+        supplier = suppliers[i];
+        clon = templateSuppliersOptionList.content.cloneNode(true);
+        tagOption = clon.querySelector('option');
+        tagOption.value = JSON.stringify(supplier);
+        tagOption.text = supplier.name + " <---> " + supplier.country;
+        fragment.appendChild(clon);
+    }
+    view.appendChild(fragment);
+}
+
 function getAllSuppliers() {
     let targetPath = host + 'suppliers';
-
+    var objectJsonResult;
     $.ajax({
         url: targetPath,
         method: "get",
         dataType: "html",
+        async: false,
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         headers: {
             'Authorization': token
@@ -364,13 +428,14 @@ function getAllSuppliers() {
             objectJsonResult = JSON.parse(result);
             console.log(objectJsonResult);
             showSuppliersList(objectJsonResult);
-            buttonsUpdateSuppliers();
+            //buttonsUpdateSuppliers();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         let errorText = errorManagment(jqXHR, textStatus);
         $("#error_login_view").text(errorText);
         $("#error_login_view").css('visibility', "visible");
     });
+    return objectJsonResult;
 }
 
 
