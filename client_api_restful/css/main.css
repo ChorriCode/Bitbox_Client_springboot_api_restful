@@ -1,0 +1,15 @@
+html,body {
+    height: 100%;
+}
+
+.color-navbar {
+    background-color: #80bdff;
+}
+
+.color-font-navbar {
+    color: white;
+    font-weight: bold;
+}
+.color-font-error {
+    color: red;
+}
